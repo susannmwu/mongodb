@@ -1,0 +1,62 @@
+Querying Collections 
+
+1. You’re visiting Brooklyn, New York, and want to find a place for lunch. Thankfully, we have a database full of restaurants!
+
+Connect to the restaurants collection, and then query the listingsAndReviews collection to find a list of restaurants in the borough "Brooklyn".
+
+restaurants> db.listingsAndReviews.find({borough: "Brooklyn"})
+
+2. Wow! There are so many options! Narrow down your results by querying the listingsAndReviews collection again, this time where the borough is "Brooklyn" and cuisine is "Caribbean".
+
+restaurants> db.listingsAndReviews.find({borough: "Brooklyn", cuisine: "Caribbean"})
+
+
+Querying Embedded Documents 
+
+1. Let’s return to our restaurants database. Switch to the database and query it to see all of the records inside the listingsAndReviews collection. See if you can spot all of the embedded documents!
+
+restaurants> db.listingsAndReviews.find()
+
+2. Notice that the restaurant listings in our collection have an embedded document called address. We are in a rush and looking for a meal close to where we are visiting in Brooklyn, New York.
+
+Query the listingsAndReviews collection for restaurants where the zipcode is 11231. 
+
+restaurants> db.listingsAndReviews.find({"address.zipcode": "11231"})
+
+
+Comparison Operators: $gt and $lt 
+
+1. Connect to the restaurants database, then query the listingsAndReviews collection to retrieve a list of restaurants where the restaurant_id is greater than "50000000"
+restaurants> db.listingsAndReviews.find({"restaurant_id": {$gt:"50000000"}})
+
+2. Query the listingsAndReviews collection again, this time to find all the restaurants where the name of the street where the restaurant is located starts with the letter "C" or any alphanumeric character that comes before it.
+restaurants> db.listingsAndReviews.find({"address.street" : {$lte : "C"}})
+
+
+Sorting Documents
+1. Connect to the restaurants database, then query the listingsAndReviews collection, to retrieve a list of restaurants where the cuisine is "Spanish". The query results should be sorted by the name field alphabetically.
+restaurants> db.listingsAndReviews.find({cuisine: "Spanish"}).sort({"name":1})
+
+2. Query the same collection, listingsAndReviews, to return a list of restaurants where the borough is "Queens". The results should be sorted by the address zipcode field, in descending order.
+restaurants> db.listingsAndReviews.find({borough: "Queens"}).sort({"address.zipcode": -1})
+
+
+Query Projections 
+Use projections in our quieries to specify the exact fields you'd want to return in our matching documents 
+db.listingsAndReviews.find( {}, {address: 1, name: 1} )
+
+1. Connect to the restaurants database, then using the same listingsAndReviews collection as the previous exercises, run a query to get a list of restaurants where the borough is "Bronx". 
+Use a projection to return the _id, name, and cuisine fields from each matching document.
+restaurants> db.listingsAndReviews.find({borough: "Bronx"}, {_id: 1, name: 1, cuisine: 1})
+
+2. Query the listingsAndReviews collection again. This time, your query should get all documents in the collection and return all fields except for the address and grades fields.
+restaurants> db.listingsAndReviews.find({}, {address:0, grades:0})
+
+Review 
+Find all of the restaurants in the borough "Queens" that serves "Japanese" cuisine sorted in reverse alphabetical order by name.
+restaurants> db.listingsAndReviews.find({borough: "Queens", cuisine: "Japanese"}).sort({ "name": -1})
+
+Count the number of restaurants in the borough "Manhattan" serving your favorite cuisine, limited to five results.
+restaurants> db.listingsAndReviews.find({borough: "Manhattan"}).limit(5)
+
+Find all the restaurants in the borough "Bronx" that serve one of the following cuisines: "Juice, Smoothies, Fruit Salads", "Spanish", or "Pizza".
